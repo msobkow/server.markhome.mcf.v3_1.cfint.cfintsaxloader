@@ -319,7 +319,6 @@ public class CFIntSaxLoader
 		if( secUserHandler == null ) {
 			secUserHandler = new CFIntSaxLoaderSecUser( this );
 			secUserHandler.addElementHandler( "SecDevice", getSecDeviceHandler() );
-			secUserHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 		}
 		return( secUserHandler );
 	}
@@ -456,6 +455,7 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "ISOLang", getISOLangHandler() );
 			saxDocHandler.addElementHandler( "ISOTZone", getISOTZoneHandler() );
 			saxDocHandler.addElementHandler( "MimeType", getMimeTypeHandler() );
+			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecUser", getSecUserHandler() );
 			saxDocHandler.addElementHandler( "ServiceType", getServiceTypeHandler() );
 			saxDocHandler.addElementHandler( "URLProtocol", getURLProtocolHandler() );
