@@ -1,5 +1,5 @@
 
-// Description: Java 25 XML SAX Element Handler for TSecGrpMemb
+// Description: Java 25 XML SAX Element Handler for SecSysGrpMemb
 
 /*
  *	server.markhome.mcf.CFInt
@@ -43,13 +43,13 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 import server.markhome.mcf.v3_1.cfint.cfintobj.*;
 
 /*
- *	CFIntSaxLoaderTSecGrpMembParse XML SAX Element Handler implementation
- *	for TSecGrpMemb.
+ *	CFIntSaxLoaderSecSysGrpMembParse XML SAX Element Handler implementation
+ *	for SecSysGrpMemb.
  */
-public class CFIntSaxLoaderTSecGrpMemb
+public class CFIntSaxLoaderSecSysGrpMemb
 	extends CFLibXmlCoreElementHandler
 {
-	public CFIntSaxLoaderTSecGrpMemb( CFIntSaxLoader saxLoader ) {
+	public CFIntSaxLoaderSecSysGrpMemb( CFIntSaxLoader saxLoader ) {
 		super( saxLoader );
 	}
 
@@ -61,15 +61,14 @@ public class CFIntSaxLoaderTSecGrpMemb
 	throws SAXException
 	{
 		final String S_ProcName = "startElement";
-		ICFIntTSecGrpMembObj origBuff = null;
-		ICFIntTSecGrpMembEditObj editBuff = null;
+		ICFIntSecSysGrpMembObj origBuff = null;
+		ICFIntSecSysGrpMembEditObj editBuff = null;
 		// Common XML Attributes
 		String attrId = null;
-		// TSecGrpMemb Attributes
+		// SecSysGrpMemb Attributes
 		String attrUser = null;
-		// TSecGrpMemb References
-		ICFIntTenantObj refTenant = null;
-		ICFIntTSecGroupObj refGroup = null;
+		// SecSysGrpMemb References
+		ICFIntSecSysGrpObj refGroup = null;
 		ICFIntSecUserObj refUser = null;
 		// Attribute Extraction
 		String attrLocalName;
@@ -77,7 +76,7 @@ public class CFIntSaxLoaderTSecGrpMemb
 		int idxAttr;
 		final String S_LocalName = "LocalName";
 		try {
-			assert qName.equals( "TSecGrpMemb" );
+			assert qName.equals( "SecSysGrpMemb" );
 
 			CFIntSaxLoader saxLoader = (CFIntSaxLoader)getParser();
 			if( saxLoader == null ) {
@@ -96,8 +95,8 @@ public class CFIntSaxLoaderTSecGrpMemb
 			}
 
 			// Instantiate an edit buffer for the parsed information
-			origBuff = (ICFIntTSecGrpMembObj)schemaObj.getTSecGrpMembTableObj().newInstance();
-			editBuff = (ICFIntTSecGrpMembEditObj)origBuff.beginEdit();
+			origBuff = (ICFIntSecSysGrpMembObj)schemaObj.getSecSysGrpMembTableObj().newInstance();
+			editBuff = (ICFIntSecSysGrpMembEditObj)origBuff.beginEdit();
 
 			// Extract Attributes
 			numAttrs = attrs.getLength();
@@ -174,32 +173,16 @@ public class CFIntSaxLoaderTSecGrpMemb
 					0,
 					"scopeObj" );
 			}
-			else if( scopeObj instanceof ICFIntTSecGroupObj ) {
-				refGroup = (ICFIntTSecGroupObj) scopeObj;
+			else if( scopeObj instanceof ICFIntSecSysGrpObj ) {
+				refGroup = (ICFIntSecSysGrpObj) scopeObj;
 				editBuff.setRequiredContainerGroup( refGroup );
-				refTenant = (ICFIntTenantObj)editBuff.getRequiredOwnerTenant();
 			}
 			else {
 				throw new CFLibUnsupportedClassException( getClass(),
 					S_ProcName,
 					"scopeObj",
 					scopeObj,
-					"ICFIntTSecGroupObj" );
-			}
-
-			// Resolve and apply Owner reference
-
-			if( refTenant == null ) {
-				if( scopeObj instanceof ICFIntTenantObj ) {
-					refTenant = (ICFIntTenantObj) scopeObj;
-					editBuff.setRequiredOwnerTenant( refTenant );
-				}
-				else {
-					throw new CFLibNullArgumentException( getClass(),
-						S_ProcName,
-						0,
-						"Owner<Tenant>" );
-				}
+					"ICFIntSecSysGrpObj" );
 			}
 
 			// Lookup refUser by key name value attr
@@ -217,12 +200,12 @@ public class CFIntSaxLoaderTSecGrpMemb
 			}
 			editBuff.setRequiredParentUser( refUser );
 
-			ICFIntTSecGrpMembObj origTSecGrpMemb;
-			ICFIntTSecGrpMembEditObj editTSecGrpMemb = editBuff;
-			origTSecGrpMemb = (ICFIntTSecGrpMembObj)editTSecGrpMemb.create();
-			editTSecGrpMemb = null;
+			ICFIntSecSysGrpMembObj origSecSysGrpMemb;
+			ICFIntSecSysGrpMembEditObj editSecSysGrpMemb = editBuff;
+			origSecSysGrpMemb = (ICFIntSecSysGrpMembObj)editSecSysGrpMemb.create();
+			editSecSysGrpMemb = null;
 
-			curContext.putNamedValue( "Object", origTSecGrpMemb );
+			curContext.putNamedValue( "Object", origSecSysGrpMemb );
 		}
 		catch( RuntimeException e ) {
 			throw new SAXException( "Near " + getParser().getLocationInfo() + ": Caught and rethrew " + e.getClass().getName() + " - " + e.getMessage(),

@@ -1,5 +1,5 @@
 
-// Description: Java 25 XML SAX Element Handler for HostNode
+// Description: Java 25 XML SAX Element Handler for SecSysGrp
 
 /*
  *	server.markhome.mcf.CFInt
@@ -43,13 +43,13 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 import server.markhome.mcf.v3_1.cfint.cfintobj.*;
 
 /*
- *	CFIntSaxLoaderHostNodeParse XML SAX Element Handler implementation
- *	for HostNode.
+ *	CFIntSaxLoaderSecSysGrpParse XML SAX Element Handler implementation
+ *	for SecSysGrp.
  */
-public class CFIntSaxLoaderHostNode
+public class CFIntSaxLoaderSecSysGrp
 	extends CFLibXmlCoreElementHandler
 {
-	public CFIntSaxLoaderHostNode( CFIntSaxLoader saxLoader ) {
+	public CFIntSaxLoaderSecSysGrp( CFIntSaxLoader saxLoader ) {
 		super( saxLoader );
 	}
 
@@ -61,22 +61,21 @@ public class CFIntSaxLoaderHostNode
 	throws SAXException
 	{
 		final String S_ProcName = "startElement";
-		ICFIntHostNodeObj origBuff = null;
-		ICFIntHostNodeEditObj editBuff = null;
+		ICFIntSecSysGrpObj origBuff = null;
+		ICFIntSecSysGrpEditObj editBuff = null;
 		// Common XML Attributes
 		String attrId = null;
-		// HostNode Attributes
-		String attrDescription = null;
-		String attrHostName = null;
-		// HostNode References
-		ICFIntClusterObj refCluster = null;
+		// SecSysGrp Attributes
+		String attrName = null;
+		String attrSecLevel = null;
+		// SecSysGrp References
 		// Attribute Extraction
 		String attrLocalName;
 		int numAttrs;
 		int idxAttr;
 		final String S_LocalName = "LocalName";
 		try {
-			assert qName.equals( "HostNode" );
+			assert qName.equals( "SecSysGrp" );
 
 			CFIntSaxLoader saxLoader = (CFIntSaxLoader)getParser();
 			if( saxLoader == null ) {
@@ -95,8 +94,8 @@ public class CFIntSaxLoaderHostNode
 			}
 
 			// Instantiate an edit buffer for the parsed information
-			origBuff = (ICFIntHostNodeObj)schemaObj.getHostNodeTableObj().newInstance();
-			editBuff = (ICFIntHostNodeEditObj)origBuff.beginEdit();
+			origBuff = (ICFIntSecSysGrpObj)schemaObj.getSecSysGrpTableObj().newInstance();
+			editBuff = (ICFIntSecSysGrpEditObj)origBuff.beginEdit();
 
 			// Extract Attributes
 			numAttrs = attrs.getLength();
@@ -111,23 +110,23 @@ public class CFIntSaxLoaderHostNode
 					}
 					attrId = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "Description" ) ) {
-					if( attrDescription != null ) {
+				else if( attrLocalName.equals( "Name" ) ) {
+					if( attrName != null ) {
 						throw new CFLibUniqueIndexViolationException( getClass(),
 							S_ProcName,
 							S_LocalName,
 							attrLocalName );
 					}
-					attrDescription = attrs.getValue( idxAttr );
+					attrName = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "HostName" ) ) {
-					if( attrHostName != null ) {
+				else if( attrLocalName.equals( "SecLevel" ) ) {
+					if( attrSecLevel != null ) {
 						throw new CFLibUniqueIndexViolationException( getClass(),
 							S_ProcName,
 							S_LocalName,
 							attrLocalName );
 					}
-					attrHostName = attrs.getValue( idxAttr );
+					attrSecLevel = attrs.getValue( idxAttr );
 				}
 				else if( attrLocalName.equals( "schemaLocation" ) ) {
 					// ignored
@@ -141,24 +140,24 @@ public class CFIntSaxLoaderHostNode
 			}
 
 			// Ensure that required attributes have values
-			if( attrDescription == null ) {
+			if( attrName == null ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
 					0,
-					"Description" );
+					"Name" );
 			}
-			if( attrHostName == null ) {
+			if( ( attrSecLevel == null ) || ( attrSecLevel.length() <= 0 ) ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
 					0,
-					"HostName" );
+					"SecLevel" );
 			}
 
 			// Save named attributes to context
 			CFLibXmlCoreContext curContext = getParser().getCurContext();
 			curContext.putNamedValue( "Id", attrId );
-			curContext.putNamedValue( "Description", attrDescription );
-			curContext.putNamedValue( "HostName", attrHostName );
+			curContext.putNamedValue( "Name", attrName );
+			curContext.putNamedValue( "SecLevel", attrSecLevel );
 
 			// Convert string attributes to native Java types
 			// and apply the converted attributes to the editBuff.
@@ -170,11 +169,11 @@ public class CFIntSaxLoaderHostNode
 			else {
 				natId = null;
 			}
-			String natDescription = attrDescription;
-			editBuff.setRequiredDescription( natDescription );
+			String natName = attrName;
+			editBuff.setRequiredName( natName );
 
-			String natHostName = attrHostName;
-			editBuff.setRequiredHostName( natHostName );
+			ICFSecSchema.SecLevelEnum natSecLevel = ICFSecSchema.parseSecLevelEnum( attrSecLevel );
+			editBuff.setRequiredSecLevel( natSecLevel );
 
 			// Get the scope/container object
 
@@ -187,63 +186,42 @@ public class CFIntSaxLoaderHostNode
 				scopeObj = null;
 			}
 
-			// Resolve and apply required Container reference
-
-			if( scopeObj == null ) {
-				throw new CFLibNullArgumentException( getClass(),
-					S_ProcName,
-					0,
-					"scopeObj" );
-			}
-			else if( scopeObj instanceof ICFIntClusterObj ) {
-				refCluster = (ICFIntClusterObj) scopeObj;
-				editBuff.setRequiredContainerCluster( refCluster );
-			}
-			else {
-				throw new CFLibUnsupportedClassException( getClass(),
-					S_ProcName,
-					"scopeObj",
-					scopeObj,
-					"ICFIntClusterObj" );
-			}
-
-			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getHostNodeLoaderBehaviour();
-			ICFIntHostNodeEditObj editHostNode = null;
-			ICFIntHostNodeObj origHostNode = (ICFIntHostNodeObj)schemaObj.getHostNodeTableObj().readHostNodeByHostNameIdx( refCluster.getRequiredId(),
-			editBuff.getRequiredHostName() );
-			if( origHostNode == null ) {
-				editHostNode = editBuff;
+			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecSysGrpLoaderBehaviour();
+			ICFIntSecSysGrpEditObj editSecSysGrp = null;
+			ICFIntSecSysGrpObj origSecSysGrp = (ICFIntSecSysGrpObj)schemaObj.getSecSysGrpTableObj().readSecSysGrpByUNameIdx( editBuff.getRequiredName() );
+			if( origSecSysGrp == null ) {
+				editSecSysGrp = editBuff;
 			}
 			else {
 				switch( loaderBehaviour ) {
 					case Insert:
 						break;
 					case Update:
-						editHostNode = (ICFIntHostNodeEditObj)origHostNode.beginEdit();
-						editHostNode.setRequiredDescription( editBuff.getRequiredDescription() );
-						editHostNode.setRequiredHostName( editBuff.getRequiredHostName() );
+						editSecSysGrp = (ICFIntSecSysGrpEditObj)origSecSysGrp.beginEdit();
+						editSecSysGrp.setRequiredName( editBuff.getRequiredName() );
+						editSecSysGrp.setRequiredSecLevel( editBuff.getRequiredSecLevel() );
 						break;
 					case Replace:
-						editHostNode = (ICFIntHostNodeEditObj)origHostNode.beginEdit();
-						editHostNode.deleteInstance();
-						editHostNode = null;
-						origHostNode = null;
-						editHostNode = editBuff;
+						editSecSysGrp = (ICFIntSecSysGrpEditObj)origSecSysGrp.beginEdit();
+						editSecSysGrp.deleteInstance();
+						editSecSysGrp = null;
+						origSecSysGrp = null;
+						editSecSysGrp = editBuff;
 						break;
 				}
 			}
 
-			if( editHostNode != null ) {
-				if( origHostNode != null ) {
-					editHostNode.update();
+			if( editSecSysGrp != null ) {
+				if( origSecSysGrp != null ) {
+					editSecSysGrp.update();
 				}
 				else {
-					origHostNode = (ICFIntHostNodeObj)editHostNode.create();
+					origSecSysGrp = (ICFIntSecSysGrpObj)editSecSysGrp.create();
 				}
-				editHostNode = null;
+				editSecSysGrp = null;
 			}
 
-			curContext.putNamedValue( "Object", origHostNode );
+			curContext.putNamedValue( "Object", origSecSysGrp );
 		}
 		catch( RuntimeException e ) {
 			throw new SAXException( "Near " + getParser().getLocationInfo() + ": Caught and rethrew " + e.getClass().getName() + " - " + e.getMessage(),

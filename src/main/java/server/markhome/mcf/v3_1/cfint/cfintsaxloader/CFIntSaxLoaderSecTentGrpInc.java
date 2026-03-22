@@ -1,5 +1,5 @@
 
-// Description: Java 25 XML SAX Element Handler for SecDevice
+// Description: Java 25 XML SAX Element Handler for SecTentGrpInc
 
 /*
  *	server.markhome.mcf.CFInt
@@ -43,13 +43,13 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 import server.markhome.mcf.v3_1.cfint.cfintobj.*;
 
 /*
- *	CFIntSaxLoaderSecDeviceParse XML SAX Element Handler implementation
- *	for SecDevice.
+ *	CFIntSaxLoaderSecTentGrpIncParse XML SAX Element Handler implementation
+ *	for SecTentGrpInc.
  */
-public class CFIntSaxLoaderSecDevice
+public class CFIntSaxLoaderSecTentGrpInc
 	extends CFLibXmlCoreElementHandler
 {
-	public CFIntSaxLoaderSecDevice( CFIntSaxLoader saxLoader ) {
+	public CFIntSaxLoaderSecTentGrpInc( CFIntSaxLoader saxLoader ) {
 		super( saxLoader );
 	}
 
@@ -61,20 +61,19 @@ public class CFIntSaxLoaderSecDevice
 	throws SAXException
 	{
 		final String S_ProcName = "startElement";
-		ICFIntSecDeviceObj origBuff = null;
-		ICFIntSecDeviceEditObj editBuff = null;
+		ICFIntSecTentGrpIncObj origBuff = null;
+		ICFIntSecTentGrpIncEditObj editBuff = null;
 		// Common XML Attributes
 		String attrId = null;
-		// SecDevice Attributes
-		// SecDevice References
-		ICFIntSecUserObj refSecUser = null;
+		// SecTentGrpInc Attributes
+		// SecTentGrpInc References
 		// Attribute Extraction
 		String attrLocalName;
 		int numAttrs;
 		int idxAttr;
 		final String S_LocalName = "LocalName";
 		try {
-			assert qName.equals( "SecDevice" );
+			assert qName.equals( "SecTentGrpInc" );
 
 			CFIntSaxLoader saxLoader = (CFIntSaxLoader)getParser();
 			if( saxLoader == null ) {
@@ -93,8 +92,8 @@ public class CFIntSaxLoaderSecDevice
 			}
 
 			// Instantiate an edit buffer for the parsed information
-			origBuff = (ICFIntSecDeviceObj)schemaObj.getSecDeviceTableObj().newInstance();
-			editBuff = (ICFIntSecDeviceEditObj)origBuff.beginEdit();
+			origBuff = (ICFIntSecTentGrpIncObj)schemaObj.getSecTentGrpIncTableObj().newInstance();
+			editBuff = (ICFIntSecTentGrpIncEditObj)origBuff.beginEdit();
 
 			// Extract Attributes
 			numAttrs = attrs.getLength();
@@ -147,61 +146,41 @@ public class CFIntSaxLoaderSecDevice
 				scopeObj = null;
 			}
 
-			// Resolve and apply required Container reference
-
-			if( scopeObj == null ) {
-				throw new CFLibNullArgumentException( getClass(),
-					S_ProcName,
-					0,
-					"scopeObj" );
-			}
-			else if( scopeObj instanceof ICFIntSecUserObj ) {
-				refSecUser = (ICFIntSecUserObj) scopeObj;
-				editBuff.setRequiredContainerSecUser( refSecUser );
-			}
-			else {
-				throw new CFLibUnsupportedClassException( getClass(),
-					S_ProcName,
-					"scopeObj",
-					scopeObj,
-					"ICFIntSecUserObj" );
-			}
-
-			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecDeviceLoaderBehaviour();
-			ICFIntSecDeviceEditObj editSecDevice = null;
-			ICFIntSecDeviceObj origSecDevice = (ICFIntSecDeviceObj)schemaObj.getSecDeviceTableObj().readSecDeviceByNameIdx( refSecUser.getRequiredSecUserId(),
-			editBuff.getRequiredDevName() );
-			if( origSecDevice == null ) {
-				editSecDevice = editBuff;
+			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecTentGrpIncLoaderBehaviour();
+			ICFIntSecTentGrpIncEditObj editSecTentGrpInc = null;
+			ICFIntSecTentGrpIncObj origSecTentGrpInc = (ICFIntSecTentGrpIncObj)schemaObj.getSecTentGrpIncTableObj().readSecTentGrpIncByIdIdx( editBuff.getRequiredSecTentGrpId(),
+			editBuff.getRequiredIncName() );
+			if( origSecTentGrpInc == null ) {
+				editSecTentGrpInc = editBuff;
 			}
 			else {
 				switch( loaderBehaviour ) {
 					case Insert:
 						break;
 					case Update:
-						editSecDevice = (ICFIntSecDeviceEditObj)origSecDevice.beginEdit();
+						editSecTentGrpInc = (ICFIntSecTentGrpIncEditObj)origSecTentGrpInc.beginEdit();
 						break;
 					case Replace:
-						editSecDevice = (ICFIntSecDeviceEditObj)origSecDevice.beginEdit();
-						editSecDevice.deleteInstance();
-						editSecDevice = null;
-						origSecDevice = null;
-						editSecDevice = editBuff;
+						editSecTentGrpInc = (ICFIntSecTentGrpIncEditObj)origSecTentGrpInc.beginEdit();
+						editSecTentGrpInc.deleteInstance();
+						editSecTentGrpInc = null;
+						origSecTentGrpInc = null;
+						editSecTentGrpInc = editBuff;
 						break;
 				}
 			}
 
-			if( editSecDevice != null ) {
-				if( origSecDevice != null ) {
-					editSecDevice.update();
+			if( editSecTentGrpInc != null ) {
+				if( origSecTentGrpInc != null ) {
+					editSecTentGrpInc.update();
 				}
 				else {
-					origSecDevice = (ICFIntSecDeviceObj)editSecDevice.create();
+					origSecTentGrpInc = (ICFIntSecTentGrpIncObj)editSecTentGrpInc.create();
 				}
-				editSecDevice = null;
+				editSecTentGrpInc = null;
 			}
 
-			curContext.putNamedValue( "Object", origSecDevice );
+			curContext.putNamedValue( "Object", origSecTentGrpInc );
 		}
 		catch( RuntimeException e ) {
 			throw new SAXException( "Near " + getParser().getLocationInfo() + ": Caught and rethrew " + e.getClass().getName() + " - " + e.getMessage(),

@@ -1,5 +1,5 @@
 
-// Description: Java 25 XML SAX Element Handler for SecGroup
+// Description: Java 25 XML SAX Element Handler for SecUserPassword
 
 /*
  *	server.markhome.mcf.CFInt
@@ -43,13 +43,13 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 import server.markhome.mcf.v3_1.cfint.cfintobj.*;
 
 /*
- *	CFIntSaxLoaderSecGroupParse XML SAX Element Handler implementation
- *	for SecGroup.
+ *	CFIntSaxLoaderSecUserPasswordParse XML SAX Element Handler implementation
+ *	for SecUserPassword.
  */
-public class CFIntSaxLoaderSecGroup
+public class CFIntSaxLoaderSecUserPassword
 	extends CFLibXmlCoreElementHandler
 {
-	public CFIntSaxLoaderSecGroup( CFIntSaxLoader saxLoader ) {
+	public CFIntSaxLoaderSecUserPassword( CFIntSaxLoader saxLoader ) {
 		super( saxLoader );
 	}
 
@@ -61,22 +61,21 @@ public class CFIntSaxLoaderSecGroup
 	throws SAXException
 	{
 		final String S_ProcName = "startElement";
-		ICFIntSecGroupObj origBuff = null;
-		ICFIntSecGroupEditObj editBuff = null;
+		ICFIntSecUserPasswordObj origBuff = null;
+		ICFIntSecUserPasswordEditObj editBuff = null;
 		// Common XML Attributes
 		String attrId = null;
-		// SecGroup Attributes
-		String attrName = null;
-		String attrIsVisible = null;
-		// SecGroup References
-		ICFIntClusterObj refCluster = null;
+		// SecUserPassword Attributes
+		String attrPWSetStamp = null;
+		String attrPasswordHash = null;
+		// SecUserPassword References
 		// Attribute Extraction
 		String attrLocalName;
 		int numAttrs;
 		int idxAttr;
 		final String S_LocalName = "LocalName";
 		try {
-			assert qName.equals( "SecGroup" );
+			assert qName.equals( "SecUserPassword" );
 
 			CFIntSaxLoader saxLoader = (CFIntSaxLoader)getParser();
 			if( saxLoader == null ) {
@@ -95,8 +94,8 @@ public class CFIntSaxLoaderSecGroup
 			}
 
 			// Instantiate an edit buffer for the parsed information
-			origBuff = (ICFIntSecGroupObj)schemaObj.getSecGroupTableObj().newInstance();
-			editBuff = (ICFIntSecGroupEditObj)origBuff.beginEdit();
+			origBuff = (ICFIntSecUserPasswordObj)schemaObj.getSecUserPasswordTableObj().newInstance();
+			editBuff = (ICFIntSecUserPasswordEditObj)origBuff.beginEdit();
 
 			// Extract Attributes
 			numAttrs = attrs.getLength();
@@ -111,23 +110,23 @@ public class CFIntSaxLoaderSecGroup
 					}
 					attrId = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "Name" ) ) {
-					if( attrName != null ) {
+				else if( attrLocalName.equals( "PWSetStamp" ) ) {
+					if( attrPWSetStamp != null ) {
 						throw new CFLibUniqueIndexViolationException( getClass(),
 							S_ProcName,
 							S_LocalName,
 							attrLocalName );
 					}
-					attrName = attrs.getValue( idxAttr );
+					attrPWSetStamp = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "IsVisible" ) ) {
-					if( attrIsVisible != null ) {
+				else if( attrLocalName.equals( "PasswordHash" ) ) {
+					if( attrPasswordHash != null ) {
 						throw new CFLibUniqueIndexViolationException( getClass(),
 							S_ProcName,
 							S_LocalName,
 							attrLocalName );
 					}
-					attrIsVisible = attrs.getValue( idxAttr );
+					attrPasswordHash = attrs.getValue( idxAttr );
 				}
 				else if( attrLocalName.equals( "schemaLocation" ) ) {
 					// ignored
@@ -141,24 +140,24 @@ public class CFIntSaxLoaderSecGroup
 			}
 
 			// Ensure that required attributes have values
-			if( attrName == null ) {
+			if( ( attrPWSetStamp == null ) || ( attrPWSetStamp.length() <= 0 ) ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
 					0,
-					"Name" );
+					"PWSetStamp" );
 			}
-			if( ( attrIsVisible == null ) || ( attrIsVisible.length() <= 0 ) ) {
+			if( attrPasswordHash == null ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
 					0,
-					"IsVisible" );
+					"PasswordHash" );
 			}
 
 			// Save named attributes to context
 			CFLibXmlCoreContext curContext = getParser().getCurContext();
 			curContext.putNamedValue( "Id", attrId );
-			curContext.putNamedValue( "Name", attrName );
-			curContext.putNamedValue( "IsVisible", attrIsVisible );
+			curContext.putNamedValue( "PWSetStamp", attrPWSetStamp );
+			curContext.putNamedValue( "PasswordHash", attrPasswordHash );
 
 			// Convert string attributes to native Java types
 			// and apply the converted attributes to the editBuff.
@@ -170,23 +169,21 @@ public class CFIntSaxLoaderSecGroup
 			else {
 				natId = null;
 			}
-			String natName = attrName;
-			editBuff.setRequiredName( natName );
-
-			boolean natIsVisible;
-			if( attrIsVisible.equals( "true" ) || attrIsVisible.equals( "yes" ) || attrIsVisible.equals( "1" ) ) {
-				natIsVisible = true;
+			LocalDateTime natPWSetStamp;
+			try {
+				natPWSetStamp = CFLibXmlUtil.parseTimestamp( attrPWSetStamp );
 			}
-			else if( attrIsVisible.equals( "false" ) || attrIsVisible.equals( "no" ) || attrIsVisible.equals( "0" ) ) {
-				natIsVisible = false;
-			}
-			else {
-				throw new CFLibUsageException( getClass(),
+			catch( RuntimeException e ) {
+				throw new CFLibInvalidArgumentException( getClass(),
 					S_ProcName,
-					String.format(Inz.x("cflib.xml.CFLibXmlUtil.XmlBooleanInvalid"), "IsVisible", attrIsVisible),
-					String.format(Inz.s("cflib.xml.CFLibXmlUtil.XmlBooleanInvalid"), "IsVisible", attrIsVisible));
+					0,
+					"PWSetStamp",
+					e );
 			}
-			editBuff.setRequiredIsVisible( natIsVisible );
+			editBuff.setRequiredPWSetStamp( natPWSetStamp );
+
+			String natPasswordHash = attrPasswordHash;
+			editBuff.setRequiredPasswordHash( natPasswordHash );
 
 			// Get the scope/container object
 
@@ -199,63 +196,12 @@ public class CFIntSaxLoaderSecGroup
 				scopeObj = null;
 			}
 
-			// Resolve and apply required Container reference
+			ICFIntSecUserPasswordObj origSecUserPassword;
+			ICFIntSecUserPasswordEditObj editSecUserPassword = editBuff;
+			origSecUserPassword = (ICFIntSecUserPasswordObj)editSecUserPassword.create();
+			editSecUserPassword = null;
 
-			if( scopeObj == null ) {
-				throw new CFLibNullArgumentException( getClass(),
-					S_ProcName,
-					0,
-					"scopeObj" );
-			}
-			else if( scopeObj instanceof ICFIntClusterObj ) {
-				refCluster = (ICFIntClusterObj) scopeObj;
-				editBuff.setRequiredContainerCluster( refCluster );
-			}
-			else {
-				throw new CFLibUnsupportedClassException( getClass(),
-					S_ProcName,
-					"scopeObj",
-					scopeObj,
-					"ICFIntClusterObj" );
-			}
-
-			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecGroupLoaderBehaviour();
-			ICFIntSecGroupEditObj editSecGroup = null;
-			ICFIntSecGroupObj origSecGroup = (ICFIntSecGroupObj)schemaObj.getSecGroupTableObj().readSecGroupByUNameIdx( refCluster.getRequiredId(),
-			editBuff.getRequiredName() );
-			if( origSecGroup == null ) {
-				editSecGroup = editBuff;
-			}
-			else {
-				switch( loaderBehaviour ) {
-					case Insert:
-						break;
-					case Update:
-						editSecGroup = (ICFIntSecGroupEditObj)origSecGroup.beginEdit();
-						editSecGroup.setRequiredName( editBuff.getRequiredName() );
-						editSecGroup.setRequiredIsVisible( editBuff.getRequiredIsVisible() );
-						break;
-					case Replace:
-						editSecGroup = (ICFIntSecGroupEditObj)origSecGroup.beginEdit();
-						editSecGroup.deleteInstance();
-						editSecGroup = null;
-						origSecGroup = null;
-						editSecGroup = editBuff;
-						break;
-				}
-			}
-
-			if( editSecGroup != null ) {
-				if( origSecGroup != null ) {
-					editSecGroup.update();
-				}
-				else {
-					origSecGroup = (ICFIntSecGroupObj)editSecGroup.create();
-				}
-				editSecGroup = null;
-			}
-
-			curContext.putNamedValue( "Object", origSecGroup );
+			curContext.putNamedValue( "Object", origSecUserPassword );
 		}
 		catch( RuntimeException e ) {
 			throw new SAXException( "Near " + getParser().getLocationInfo() + ": Caught and rethrew " + e.getClass().getName() + " - " + e.getMessage(),
