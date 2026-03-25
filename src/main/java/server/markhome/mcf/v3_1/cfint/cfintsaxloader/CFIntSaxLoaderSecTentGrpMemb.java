@@ -148,7 +148,8 @@ public class CFIntSaxLoaderSecTentGrpMemb
 
 			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecTentGrpMembLoaderBehaviour();
 			ICFIntSecTentGrpMembEditObj editSecTentGrpMemb = null;
-			ICFIntSecTentGrpMembObj origSecTentGrpMemb = (ICFIntSecTentGrpMembObj)schemaObj.getSecTentGrpMembTableObj().readSecTentGrpMembByUserIdx( editBuff.getRequiredSecUserId() );
+			ICFIntSecTentGrpMembObj origSecTentGrpMemb = (ICFIntSecTentGrpMembObj)schemaObj.getSecTentGrpMembTableObj().readSecTentGrpMembByIdIdx( editBuff.getRequiredSecTentGrpId(),
+			editBuff.getRequiredLoginId() );
 			if( origSecTentGrpMemb == null ) {
 				editSecTentGrpMemb = editBuff;
 			}

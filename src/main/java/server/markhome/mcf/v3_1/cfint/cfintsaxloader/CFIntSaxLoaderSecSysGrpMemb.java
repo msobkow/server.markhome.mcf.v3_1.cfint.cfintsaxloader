@@ -202,7 +202,7 @@ public class CFIntSaxLoaderSecSysGrpMemb
 
 			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecSysGrpMembLoaderBehaviour();
 			ICFIntSecSysGrpMembEditObj editSecSysGrpMemb = null;
-			ICFIntSecSysGrpMembObj origSecSysGrpMemb = (ICFIntSecSysGrpMembObj)schemaObj.getSecSysGrpMembTableObj().readSecSysGrpMembByUserIdx( refUser.getRequiredSecUserId() );
+			ICFIntSecSysGrpMembObj origSecSysGrpMemb = (ICFIntSecSysGrpMembObj)schemaObj.getSecSysGrpMembTableObj().readSecSysGrpMembByLoginIdx( refUser.getRequiredLoginId() );
 			if( origSecSysGrpMemb == null ) {
 				editSecSysGrpMemb = editBuff;
 			}
