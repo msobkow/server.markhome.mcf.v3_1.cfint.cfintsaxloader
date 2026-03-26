@@ -446,13 +446,9 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "ISOTZone", getISOTZoneHandler() );
 			saxDocHandler.addElementHandler( "MimeType", getMimeTypeHandler() );
 			saxDocHandler.addElementHandler( "SecClusGrp", getSecClusGrpHandler() );
-			saxDocHandler.addElementHandler( "SecClusGrpInc", getSecClusGrpIncHandler() );
-			saxDocHandler.addElementHandler( "SecClusGrpMemb", getSecClusGrpMembHandler() );
 			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecSysGrp", getSecSysGrpHandler() );
 			saxDocHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
-			saxDocHandler.addElementHandler( "SecTentGrpInc", getSecTentGrpIncHandler() );
-			saxDocHandler.addElementHandler( "SecTentGrpMemb", getSecTentGrpMembHandler() );
 			saxDocHandler.addElementHandler( "SecUser", getSecUserHandler() );
 			saxDocHandler.addElementHandler( "SecUserPWHistory", getSecUserPWHistoryHandler() );
 			saxDocHandler.addElementHandler( "SecUserPassword", getSecUserPasswordHandler() );
