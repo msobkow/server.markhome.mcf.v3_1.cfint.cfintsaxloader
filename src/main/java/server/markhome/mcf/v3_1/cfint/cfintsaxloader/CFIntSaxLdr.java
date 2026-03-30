@@ -773,6 +773,23 @@ public class CFIntSaxLdr
 				throw new RuntimeException( S_ProcName + "ERROR: Expected segment to comprise <TableName>={*|Insert|Update|Replace}" );
 			}
 		}
+		else if( tableName.equals( "SecUserEMConf" ) ) {
+			if( tableOption.equals( "*" ) ) {
+				// Leave at default
+			}
+			else if( tableOption.equals( "Insert" ) ) {
+				loader.setSecUserEMConfLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Insert );
+			}
+			else if( tableOption.equals( "Update" ) ) {
+				loader.setSecUserEMConfLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Update );
+			}
+			else if( tableOption.equals( "Replace" ) ) {
+				loader.setSecUserEMConfLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Replace );
+			}
+			else {
+				throw new RuntimeException( S_ProcName + "ERROR: Expected segment to comprise <TableName>={*|Insert|Update|Replace}" );
+			}
+		}
 		else if( tableName.equals( "SecUserPWHistory" ) ) {
 			if( tableOption.equals( "*" ) ) {
 				// Leave at default
@@ -785,6 +802,23 @@ public class CFIntSaxLdr
 			}
 			else if( tableOption.equals( "Replace" ) ) {
 				loader.setSecUserPWHistoryLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Replace );
+			}
+			else {
+				throw new RuntimeException( S_ProcName + "ERROR: Expected segment to comprise <TableName>={*|Insert|Update|Replace}" );
+			}
+		}
+		else if( tableName.equals( "SecUserPWReset" ) ) {
+			if( tableOption.equals( "*" ) ) {
+				// Leave at default
+			}
+			else if( tableOption.equals( "Insert" ) ) {
+				loader.setSecUserPWResetLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Insert );
+			}
+			else if( tableOption.equals( "Update" ) ) {
+				loader.setSecUserPWResetLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Update );
+			}
+			else if( tableOption.equals( "Replace" ) ) {
+				loader.setSecUserPWResetLoaderBehaviour( CFIntSaxLoader.LoaderBehaviourEnum.Replace );
 			}
 			else {
 				throw new RuntimeException( S_ProcName + "ERROR: Expected segment to comprise <TableName>={*|Insert|Update|Replace}" );
