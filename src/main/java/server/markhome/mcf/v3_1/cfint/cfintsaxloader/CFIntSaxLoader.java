@@ -334,6 +334,9 @@ public class CFIntSaxLoader
 	protected CFIntSaxLoaderSecUser getSecUserHandler() {
 		if( secUserHandler == null ) {
 			secUserHandler = new CFIntSaxLoaderSecUser( this );
+			secUserHandler.addElementHandler( "SecUserPassword", getSecUserPasswordHandler() );
+			secUserHandler.addElementHandler( "SecUserEMConf", getSecUserEMConfHandler() );
+			secUserHandler.addElementHandler( "SecUserPWReset", getSecUserPWResetHandler() );
 		}
 		return( secUserHandler );
 	}
