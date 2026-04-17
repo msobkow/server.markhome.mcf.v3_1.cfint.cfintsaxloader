@@ -67,6 +67,7 @@ public class CFIntSaxLoaderSecUser
 		String attrId = null;
 		// SecUser Attributes
 		String attrLoginId = null;
+		String attrAccountStatus = null;
 		String attrDfltSysGrpName = null;
 		String attrDfltClusGrpName = null;
 		String attrDfltTentGrpName = null;
@@ -123,6 +124,15 @@ public class CFIntSaxLoaderSecUser
 							attrLocalName );
 					}
 					attrLoginId = attrs.getValue( idxAttr );
+				}
+				else if( attrLocalName.equals( "AccountStatus" ) ) {
+					if( attrAccountStatus != null ) {
+						throw new CFLibUniqueIndexViolationException( getClass(),
+							S_ProcName,
+							S_LocalName,
+							attrLocalName );
+					}
+					attrAccountStatus = attrs.getValue( idxAttr );
 				}
 				else if( attrLocalName.equals( "DfltSysGrpName" ) ) {
 					if( attrDfltSysGrpName != null ) {
@@ -196,6 +206,12 @@ public class CFIntSaxLoaderSecUser
 					0,
 					"LoginId" );
 			}
+			if( ( attrAccountStatus == null ) || ( attrAccountStatus.length() <= 0 ) ) {
+				throw new CFLibNullArgumentException( getClass(),
+					S_ProcName,
+					0,
+					"AccountStatus" );
+			}
 			if( attrEMailAddress == null ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
@@ -207,6 +223,7 @@ public class CFIntSaxLoaderSecUser
 			CFLibXmlCoreContext curContext = getParser().getCurContext();
 			curContext.putNamedValue( "Id", attrId );
 			curContext.putNamedValue( "LoginId", attrLoginId );
+			curContext.putNamedValue( "AccountStatus", attrAccountStatus );
 			curContext.putNamedValue( "DfltSysGrpName", attrDfltSysGrpName );
 			curContext.putNamedValue( "DfltClusGrpName", attrDfltClusGrpName );
 			curContext.putNamedValue( "DfltTentGrpName", attrDfltTentGrpName );
@@ -226,6 +243,9 @@ public class CFIntSaxLoaderSecUser
 			}
 			String natLoginId = attrLoginId;
 			editBuff.setRequiredLoginId( natLoginId );
+
+			ICFSecSchema.SecAccountStatusEnum natAccountStatus = ICFSecSchema.parseSecAccountStatusEnum( attrAccountStatus );
+			editBuff.setRequiredAccountStatus( natAccountStatus );
 
 			String natDfltSysGrpName = attrDfltSysGrpName;
 			editBuff.setOptionalDfltSysGrpName( natDfltSysGrpName );
@@ -263,6 +283,7 @@ public class CFIntSaxLoaderSecUser
 					case Update:
 						editSecUser = (ICFIntSecUserEditObj)origSecUser.beginEdit();
 						editSecUser.setRequiredLoginId( editBuff.getRequiredLoginId() );
+						editSecUser.setRequiredAccountStatus( editBuff.getRequiredAccountStatus() );
 						editSecUser.setOptionalDfltSysGrpName( editBuff.getOptionalDfltSysGrpName() );
 						editSecUser.setOptionalDfltClusGrpName( editBuff.getOptionalDfltClusGrpName() );
 						editSecUser.setOptionalDfltTentGrpName( editBuff.getOptionalDfltTentGrpName() );
