@@ -112,6 +112,11 @@ public class CFIntSaxLoader
 	private LoaderBehaviourEnum secClusGrpLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secClusGrpIncLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secClusGrpMembLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secClusRoleLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secClusRoleMembLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secRoleLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secRoleEnablesLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secRoleMembLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secSessionLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secSysGrpLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secSysGrpIncLoaderBehaviour = LoaderBehaviourEnum.Insert;
@@ -119,6 +124,8 @@ public class CFIntSaxLoader
 	private LoaderBehaviourEnum secTentGrpLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secTentGrpIncLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secTentGrpMembLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secTentRoleLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum secTentRoleMembLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secUserLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secUserEMConfLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum secUserPWHistoryLoaderBehaviour = LoaderBehaviourEnum.Insert;
@@ -163,6 +170,11 @@ public class CFIntSaxLoader
 	private CFIntSaxLoaderSecClusGrp secClusGrpHandler = null;
 	private CFIntSaxLoaderSecClusGrpInc secClusGrpIncHandler = null;
 	private CFIntSaxLoaderSecClusGrpMemb secClusGrpMembHandler = null;
+	private CFIntSaxLoaderSecClusRole secClusRoleHandler = null;
+	private CFIntSaxLoaderSecClusRoleMemb secClusRoleMembHandler = null;
+	private CFIntSaxLoaderSecRole secRoleHandler = null;
+	private CFIntSaxLoaderSecRoleEnables secRoleEnablesHandler = null;
+	private CFIntSaxLoaderSecRoleMemb secRoleMembHandler = null;
 	private CFIntSaxLoaderSecSession secSessionHandler = null;
 	private CFIntSaxLoaderSecSysGrp secSysGrpHandler = null;
 	private CFIntSaxLoaderSecSysGrpInc secSysGrpIncHandler = null;
@@ -170,6 +182,8 @@ public class CFIntSaxLoader
 	private CFIntSaxLoaderSecTentGrp secTentGrpHandler = null;
 	private CFIntSaxLoaderSecTentGrpInc secTentGrpIncHandler = null;
 	private CFIntSaxLoaderSecTentGrpMemb secTentGrpMembHandler = null;
+	private CFIntSaxLoaderSecTentRole secTentRoleHandler = null;
+	private CFIntSaxLoaderSecTentRoleMemb secTentRoleMembHandler = null;
 	private CFIntSaxLoaderSecUser secUserHandler = null;
 	private CFIntSaxLoaderSecUserEMConf secUserEMConfHandler = null;
 	private CFIntSaxLoaderSecUserPWHistory secUserPWHistoryHandler = null;
@@ -289,6 +303,36 @@ public class CFIntSaxLoader
 		}
 		return( secClusGrpMembHandler );
 	}
+	protected CFIntSaxLoaderSecClusRole getSecClusRoleHandler() {
+		if( secClusRoleHandler == null ) {
+			secClusRoleHandler = new CFIntSaxLoaderSecClusRole( this );
+		}
+		return( secClusRoleHandler );
+	}
+	protected CFIntSaxLoaderSecClusRoleMemb getSecClusRoleMembHandler() {
+		if( secClusRoleMembHandler == null ) {
+			secClusRoleMembHandler = new CFIntSaxLoaderSecClusRoleMemb( this );
+		}
+		return( secClusRoleMembHandler );
+	}
+	protected CFIntSaxLoaderSecRole getSecRoleHandler() {
+		if( secRoleHandler == null ) {
+			secRoleHandler = new CFIntSaxLoaderSecRole( this );
+		}
+		return( secRoleHandler );
+	}
+	protected CFIntSaxLoaderSecRoleEnables getSecRoleEnablesHandler() {
+		if( secRoleEnablesHandler == null ) {
+			secRoleEnablesHandler = new CFIntSaxLoaderSecRoleEnables( this );
+		}
+		return( secRoleEnablesHandler );
+	}
+	protected CFIntSaxLoaderSecRoleMemb getSecRoleMembHandler() {
+		if( secRoleMembHandler == null ) {
+			secRoleMembHandler = new CFIntSaxLoaderSecRoleMemb( this );
+		}
+		return( secRoleMembHandler );
+	}
 	protected CFIntSaxLoaderSecSession getSecSessionHandler() {
 		if( secSessionHandler == null ) {
 			secSessionHandler = new CFIntSaxLoaderSecSession( this );
@@ -330,6 +374,18 @@ public class CFIntSaxLoader
 			secTentGrpMembHandler = new CFIntSaxLoaderSecTentGrpMemb( this );
 		}
 		return( secTentGrpMembHandler );
+	}
+	protected CFIntSaxLoaderSecTentRole getSecTentRoleHandler() {
+		if( secTentRoleHandler == null ) {
+			secTentRoleHandler = new CFIntSaxLoaderSecTentRole( this );
+		}
+		return( secTentRoleHandler );
+	}
+	protected CFIntSaxLoaderSecTentRoleMemb getSecTentRoleMembHandler() {
+		if( secTentRoleMembHandler == null ) {
+			secTentRoleMembHandler = new CFIntSaxLoaderSecTentRoleMemb( this );
+		}
+		return( secTentRoleMembHandler );
 	}
 	protected CFIntSaxLoaderSecUser getSecUserHandler() {
 		if( secUserHandler == null ) {
@@ -465,6 +521,9 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "ISOTZone", getISOTZoneHandler() );
 			saxDocHandler.addElementHandler( "MimeType", getMimeTypeHandler() );
 			saxDocHandler.addElementHandler( "SecClusGrp", getSecClusGrpHandler() );
+			saxDocHandler.addElementHandler( "SecClusRole", getSecClusRoleHandler() );
+			saxDocHandler.addElementHandler( "SecClusRoleMemb", getSecClusRoleMembHandler() );
+			saxDocHandler.addElementHandler( "SecRole", getSecRoleHandler() );
 			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecSysGrp", getSecSysGrpHandler() );
 			saxDocHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
@@ -619,6 +678,46 @@ public class CFIntSaxLoader
 		secClusGrpMembLoaderBehaviour = value;
 	}
 
+	public LoaderBehaviourEnum getSecClusRoleLoaderBehaviour() {
+		return( secClusRoleLoaderBehaviour );
+	}
+
+	public void setSecClusRoleLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secClusRoleLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecClusRoleMembLoaderBehaviour() {
+		return( secClusRoleMembLoaderBehaviour );
+	}
+
+	public void setSecClusRoleMembLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secClusRoleMembLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecRoleLoaderBehaviour() {
+		return( secRoleLoaderBehaviour );
+	}
+
+	public void setSecRoleLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secRoleLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecRoleEnablesLoaderBehaviour() {
+		return( secRoleEnablesLoaderBehaviour );
+	}
+
+	public void setSecRoleEnablesLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secRoleEnablesLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecRoleMembLoaderBehaviour() {
+		return( secRoleMembLoaderBehaviour );
+	}
+
+	public void setSecRoleMembLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secRoleMembLoaderBehaviour = value;
+	}
+
 	public LoaderBehaviourEnum getSecSessionLoaderBehaviour() {
 		return( secSessionLoaderBehaviour );
 	}
@@ -673,6 +772,22 @@ public class CFIntSaxLoader
 
 	public void setSecTentGrpMembLoaderBehaviour( LoaderBehaviourEnum value ) {
 		secTentGrpMembLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecTentRoleLoaderBehaviour() {
+		return( secTentRoleLoaderBehaviour );
+	}
+
+	public void setSecTentRoleLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secTentRoleLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getSecTentRoleMembLoaderBehaviour() {
+		return( secTentRoleMembLoaderBehaviour );
+	}
+
+	public void setSecTentRoleMembLoaderBehaviour( LoaderBehaviourEnum value ) {
+		secTentRoleMembLoaderBehaviour = value;
 	}
 
 	public LoaderBehaviourEnum getSecUserLoaderBehaviour() {
