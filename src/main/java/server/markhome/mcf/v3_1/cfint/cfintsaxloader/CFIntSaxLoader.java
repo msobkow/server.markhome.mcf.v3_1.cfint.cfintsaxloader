@@ -522,7 +522,6 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "MimeType", getMimeTypeHandler() );
 			saxDocHandler.addElementHandler( "SecClusGrp", getSecClusGrpHandler() );
 			saxDocHandler.addElementHandler( "SecClusRole", getSecClusRoleHandler() );
-			saxDocHandler.addElementHandler( "SecClusRoleMemb", getSecClusRoleMembHandler() );
 			saxDocHandler.addElementHandler( "SecRole", getSecRoleHandler() );
 			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecSysGrp", getSecSysGrpHandler() );
