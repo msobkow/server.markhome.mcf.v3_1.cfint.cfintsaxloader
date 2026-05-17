@@ -1,5 +1,5 @@
 
-// Description: Java 25 XML SAX Element Handler for SecClusGrpInc
+// Description: Java 25 XML SAX Element Handler for SecSysRole
 
 /*
  *	server.markhome.mcf.CFInt
@@ -43,13 +43,13 @@ import server.markhome.mcf.v3_1.cfsec.cfsecobj.*;
 import server.markhome.mcf.v3_1.cfint.cfintobj.*;
 
 /*
- *	CFIntSaxLoaderSecClusGrpIncParse XML SAX Element Handler implementation
- *	for SecClusGrpInc.
+ *	CFIntSaxLoaderSecSysRoleParse XML SAX Element Handler implementation
+ *	for SecSysRole.
  */
-public class CFIntSaxLoaderSecClusGrpInc
+public class CFIntSaxLoaderSecSysRole
 	extends CFLibXmlCoreElementHandler
 {
-	public CFIntSaxLoaderSecClusGrpInc( CFIntSaxLoader saxLoader ) {
+	public CFIntSaxLoaderSecSysRole( CFIntSaxLoader saxLoader ) {
 		super( saxLoader );
 	}
 
@@ -61,22 +61,20 @@ public class CFIntSaxLoaderSecClusGrpInc
 	throws SAXException
 	{
 		final String S_ProcName = "startElement";
-		ICFIntSecClusGrpIncObj origBuff = null;
-		ICFIntSecClusGrpIncEditObj editBuff = null;
+		ICFIntSecSysRoleObj origBuff = null;
+		ICFIntSecSysRoleEditObj editBuff = null;
 		// Common XML Attributes
 		String attrId = null;
-		// SecClusGrpInc Attributes
-		String attrSubGroup = null;
-		// SecClusGrpInc References
-		ICFIntSecClusGrpObj refGroup = null;
-		ICFIntSecSysGrpObj refSubGroup = null;
+		// SecSysRole Attributes
+		String attrName = null;
+		// SecSysRole References
 		// Attribute Extraction
 		String attrLocalName;
 		int numAttrs;
 		int idxAttr;
 		final String S_LocalName = "LocalName";
 		try {
-			assert qName.equals( "SecClusGrpInc" );
+			assert qName.equals( "SecSysRole" );
 
 			CFIntSaxLoader saxLoader = (CFIntSaxLoader)getParser();
 			if( saxLoader == null ) {
@@ -95,8 +93,8 @@ public class CFIntSaxLoaderSecClusGrpInc
 			}
 
 			// Instantiate an edit buffer for the parsed information
-			origBuff = (ICFIntSecClusGrpIncObj)schemaObj.getSecClusGrpIncTableObj().newInstance();
-			editBuff = (ICFIntSecClusGrpIncEditObj)origBuff.beginEdit();
+			origBuff = (ICFIntSecSysRoleObj)schemaObj.getSecSysRoleTableObj().newInstance();
+			editBuff = (ICFIntSecSysRoleEditObj)origBuff.beginEdit();
 
 			// Extract Attributes
 			numAttrs = attrs.getLength();
@@ -111,14 +109,14 @@ public class CFIntSaxLoaderSecClusGrpInc
 					}
 					attrId = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "SubGroup" ) ) {
-					if( attrSubGroup != null ) {
+				else if( attrLocalName.equals( "Name" ) ) {
+					if( attrName != null ) {
 						throw new CFLibUniqueIndexViolationException( getClass(),
 							S_ProcName,
 							S_LocalName,
 							attrLocalName );
 					}
-					attrSubGroup = attrs.getValue( idxAttr );
+					attrName = attrs.getValue( idxAttr );
 				}
 				else if( attrLocalName.equals( "schemaLocation" ) ) {
 					// ignored
@@ -132,17 +130,17 @@ public class CFIntSaxLoaderSecClusGrpInc
 			}
 
 			// Ensure that required attributes have values
-			if( ( attrSubGroup == null ) || ( attrSubGroup.length() <= 0 ) ) {
+			if( attrName == null ) {
 				throw new CFLibNullArgumentException( getClass(),
 					S_ProcName,
 					0,
-					"SubGroup" );
+					"Name" );
 			}
 
 			// Save named attributes to context
 			CFLibXmlCoreContext curContext = getParser().getCurContext();
 			curContext.putNamedValue( "Id", attrId );
-			curContext.putNamedValue( "SubGroup", attrSubGroup );
+			curContext.putNamedValue( "Name", attrName );
 
 			// Convert string attributes to native Java types
 			// and apply the converted attributes to the editBuff.
@@ -154,6 +152,9 @@ public class CFIntSaxLoaderSecClusGrpInc
 			else {
 				natId = null;
 			}
+			String natName = attrName;
+			editBuff.setRequiredName( natName );
+
 			// Get the scope/container object
 
 			CFLibXmlCoreContext parentContext = curContext.getPrevContext();
@@ -165,77 +166,41 @@ public class CFIntSaxLoaderSecClusGrpInc
 				scopeObj = null;
 			}
 
-			// Resolve and apply required Container reference
-
-			if( scopeObj == null ) {
-				throw new CFLibNullArgumentException( getClass(),
-					S_ProcName,
-					0,
-					"scopeObj" );
-			}
-			else if( scopeObj instanceof ICFIntSecClusGrpObj ) {
-				refGroup = (ICFIntSecClusGrpObj) scopeObj;
-				editBuff.setRequiredContainerGroup( refGroup );
-			}
-			else {
-				throw new CFLibUnsupportedClassException( getClass(),
-					S_ProcName,
-					"scopeObj",
-					scopeObj,
-					"ICFIntSecClusGrpObj" );
-			}
-
-			// Lookup refSubGroup by key name value attr
-			if( ( attrSubGroup != null ) && ( attrSubGroup.length() > 0 ) ) {
-				refSubGroup = (ICFIntSecSysGrpObj)schemaObj.getSecSysGrpTableObj().readSecSysGrpByUNameIdx( attrSubGroup );
-				if( refSubGroup == null ) {
-					throw new CFLibNullArgumentException( getClass(),
-						S_ProcName,
-						0,
-						"Resolve SubGroup reference named \"" + attrSubGroup + "\" to table SecSysGrp" );
-				}
-			}
-			else {
-				refSubGroup = null;
-			}
-			editBuff.setRequiredParentSubGroup( refSubGroup );
-
-			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecClusGrpIncLoaderBehaviour();
-			ICFIntSecClusGrpIncEditObj editSecClusGrpInc = null;
-			ICFIntSecClusGrpIncObj origSecClusGrpInc = (ICFIntSecClusGrpIncObj)schemaObj.getSecClusGrpIncTableObj().readSecClusGrpIncByIdIdx( refGroup.getRequiredSecClusGrpId(),
-			refSubGroup.getRequiredName() );
-			if( origSecClusGrpInc == null ) {
-				editSecClusGrpInc = editBuff;
+			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecSysRoleLoaderBehaviour();
+			ICFIntSecSysRoleEditObj editSecSysRole = null;
+			ICFIntSecSysRoleObj origSecSysRole = (ICFIntSecSysRoleObj)schemaObj.getSecSysRoleTableObj().readSecSysRoleByUNameIdx( editBuff.getRequiredName() );
+			if( origSecSysRole == null ) {
+				editSecSysRole = editBuff;
 			}
 			else {
 				switch( loaderBehaviour ) {
 					case Insert:
 						break;
 					case Update:
-						editSecClusGrpInc = (ICFIntSecClusGrpIncEditObj)origSecClusGrpInc.beginEdit();
-						editSecClusGrpInc.setRequiredParentSubGroup( editBuff.getRequiredParentSubGroup() );
+						editSecSysRole = (ICFIntSecSysRoleEditObj)origSecSysRole.beginEdit();
+						editSecSysRole.setRequiredName( editBuff.getRequiredName() );
 						break;
 					case Replace:
-						editSecClusGrpInc = (ICFIntSecClusGrpIncEditObj)origSecClusGrpInc.beginEdit();
-						editSecClusGrpInc.deleteInstance();
-						editSecClusGrpInc = null;
-						origSecClusGrpInc = null;
-						editSecClusGrpInc = editBuff;
+						editSecSysRole = (ICFIntSecSysRoleEditObj)origSecSysRole.beginEdit();
+						editSecSysRole.deleteInstance();
+						editSecSysRole = null;
+						origSecSysRole = null;
+						editSecSysRole = editBuff;
 						break;
 				}
 			}
 
-			if( editSecClusGrpInc != null ) {
-				if( origSecClusGrpInc != null ) {
-					editSecClusGrpInc.update();
+			if( editSecSysRole != null ) {
+				if( origSecSysRole != null ) {
+					editSecSysRole.update();
 				}
 				else {
-					origSecClusGrpInc = (ICFIntSecClusGrpIncObj)editSecClusGrpInc.create();
+					origSecSysRole = (ICFIntSecSysRoleObj)editSecSysRole.create();
 				}
-				editSecClusGrpInc = null;
+				editSecSysRole = null;
 			}
 
-			curContext.putNamedValue( "Object", origSecClusGrpInc );
+			curContext.putNamedValue( "Object", origSecSysRole );
 		}
 		catch( RuntimeException e ) {
 			throw new SAXException( "Near " + getParser().getLocationInfo() + ": Caught and rethrew " + e.getClass().getName() + " - " + e.getMessage(),
