@@ -214,6 +214,7 @@ public class CFIntSaxLoader
 		if( clusterHandler == null ) {
 			clusterHandler = new CFIntSaxLoaderCluster( this );
 			clusterHandler.addElementHandler( "Tenant", getTenantHandler() );
+			clusterHandler.addElementHandler( "SecClusRole", getSecClusRoleHandler() );
 			clusterHandler.addElementHandler( "SysCluster", getSysClusterHandler() );
 		}
 		return( clusterHandler );
@@ -420,6 +421,8 @@ public class CFIntSaxLoader
 	protected CFIntSaxLoaderTenant getTenantHandler() {
 		if( tenantHandler == null ) {
 			tenantHandler = new CFIntSaxLoaderTenant( this );
+			tenantHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
+			tenantHandler.addElementHandler( "SecTentRole", getSecTentRoleHandler() );
 			tenantHandler.addElementHandler( "Tld", getTldHandler() );
 		}
 		return( tenantHandler );
@@ -508,7 +511,6 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecSysGrp", getSecSysGrpHandler() );
 			saxDocHandler.addElementHandler( "SecSysRole", getSecSysRoleHandler() );
-			saxDocHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
 			saxDocHandler.addElementHandler( "SecUser", getSecUserHandler() );
 			saxDocHandler.addElementHandler( "SecUserPWHistory", getSecUserPWHistoryHandler() );
 			saxDocHandler.addElementHandler( "URLProtocol", getURLProtocolHandler() );
