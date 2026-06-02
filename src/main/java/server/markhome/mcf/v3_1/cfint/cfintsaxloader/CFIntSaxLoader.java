@@ -214,8 +214,6 @@ public class CFIntSaxLoader
 		if( clusterHandler == null ) {
 			clusterHandler = new CFIntSaxLoaderCluster( this );
 			clusterHandler.addElementHandler( "Tenant", getTenantHandler() );
-			clusterHandler.addElementHandler( "SecClusRole", getSecClusRoleHandler() );
-			clusterHandler.addElementHandler( "SysCluster", getSysClusterHandler() );
 		}
 		return( clusterHandler );
 	}
@@ -315,6 +313,11 @@ public class CFIntSaxLoader
 	protected CFIntSaxLoaderSecSysGrp getSecSysGrpHandler() {
 		if( secSysGrpHandler == null ) {
 			secSysGrpHandler = new CFIntSaxLoaderSecSysGrp( this );
+			secSysGrpHandler.addElementHandler( "SecSysGrpInc", getSecSysGrpIncHandler() );
+			secSysGrpHandler.addElementHandler( "SecClusGrp", getSecClusGrpHandler() );
+			secSysGrpHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
+			secSysGrpHandler.addElementHandler( "SecClusRole", getSecClusRoleHandler() );
+			secSysGrpHandler.addElementHandler( "SecTentRole", getSecTentRoleHandler() );
 		}
 		return( secSysGrpHandler );
 	}
@@ -333,6 +336,7 @@ public class CFIntSaxLoader
 	protected CFIntSaxLoaderSecSysRole getSecSysRoleHandler() {
 		if( secSysRoleHandler == null ) {
 			secSysRoleHandler = new CFIntSaxLoaderSecSysRole( this );
+			secSysRoleHandler.addElementHandler( "SecSysRoleEnables", getSecSysRoleEnablesHandler() );
 		}
 		return( secSysRoleHandler );
 	}
@@ -421,8 +425,6 @@ public class CFIntSaxLoader
 	protected CFIntSaxLoaderTenant getTenantHandler() {
 		if( tenantHandler == null ) {
 			tenantHandler = new CFIntSaxLoaderTenant( this );
-			tenantHandler.addElementHandler( "SecTentGrp", getSecTentGrpHandler() );
-			tenantHandler.addElementHandler( "SecTentRole", getSecTentRoleHandler() );
 			tenantHandler.addElementHandler( "Tld", getTldHandler() );
 		}
 		return( tenantHandler );
@@ -507,7 +509,6 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "ISOLang", getISOLangHandler() );
 			saxDocHandler.addElementHandler( "ISOTZone", getISOTZoneHandler() );
 			saxDocHandler.addElementHandler( "MimeType", getMimeTypeHandler() );
-			saxDocHandler.addElementHandler( "SecClusGrp", getSecClusGrpHandler() );
 			saxDocHandler.addElementHandler( "SecSession", getSecSessionHandler() );
 			saxDocHandler.addElementHandler( "SecSysGrp", getSecSysGrpHandler() );
 			saxDocHandler.addElementHandler( "SecSysRole", getSecSysRoleHandler() );

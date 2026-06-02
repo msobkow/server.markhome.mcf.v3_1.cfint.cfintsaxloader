@@ -66,7 +66,6 @@ public class CFIntSaxLoaderSecClusRole
 		// Common XML Attributes
 		String attrId = null;
 		// SecClusRole Attributes
-		String attrSysRole = null;
 		// SecClusRole References
 		ICFIntClusterObj refCluster = null;
 		ICFIntSecSysGrpObj refSysRole = null;
@@ -111,15 +110,6 @@ public class CFIntSaxLoaderSecClusRole
 					}
 					attrId = attrs.getValue( idxAttr );
 				}
-				else if( attrLocalName.equals( "SysRole" ) ) {
-					if( attrSysRole != null ) {
-						throw new CFLibUniqueIndexViolationException( getClass(),
-							S_ProcName,
-							S_LocalName,
-							attrLocalName );
-					}
-					attrSysRole = attrs.getValue( idxAttr );
-				}
 				else if( attrLocalName.equals( "schemaLocation" ) ) {
 					// ignored
 				}
@@ -132,17 +122,10 @@ public class CFIntSaxLoaderSecClusRole
 			}
 
 			// Ensure that required attributes have values
-			if( ( attrSysRole == null ) || ( attrSysRole.length() <= 0 ) ) {
-				throw new CFLibNullArgumentException( getClass(),
-					S_ProcName,
-					0,
-					"SysRole" );
-			}
 
 			// Save named attributes to context
 			CFLibXmlCoreContext curContext = getParser().getCurContext();
 			curContext.putNamedValue( "Id", attrId );
-			curContext.putNamedValue( "SysRole", attrSysRole );
 
 			// Convert string attributes to native Java types
 			// and apply the converted attributes to the editBuff.
@@ -173,32 +156,33 @@ public class CFIntSaxLoaderSecClusRole
 					0,
 					"scopeObj" );
 			}
-			else if( scopeObj instanceof ICFIntClusterObj ) {
-				refCluster = (ICFIntClusterObj) scopeObj;
-				editBuff.setRequiredContainerCluster( refCluster );
+			else if( scopeObj instanceof ICFIntSecSysGrpObj ) {
+				refSysRole = (ICFIntSecSysGrpObj) scopeObj;
+				editBuff.setRequiredContainerSysRole( refSysRole );
+				refCluster = (ICFIntClusterObj)editBuff.getRequiredOwnerCluster();
 			}
 			else {
 				throw new CFLibUnsupportedClassException( getClass(),
 					S_ProcName,
 					"scopeObj",
 					scopeObj,
-					"ICFIntClusterObj" );
+					"ICFIntSecSysGrpObj" );
 			}
 
-			// Lookup refSysRole by key name value attr
-			if( ( attrSysRole != null ) && ( attrSysRole.length() > 0 ) ) {
-				refSysRole = (ICFIntSecSysGrpObj)schemaObj.getSecSysGrpTableObj().readSecSysGrpByUNameIdx( attrSysRole );
-				if( refSysRole == null ) {
+			// Resolve and apply Owner reference
+
+			if( refCluster == null ) {
+				if( scopeObj instanceof ICFIntClusterObj ) {
+					refCluster = (ICFIntClusterObj) scopeObj;
+					editBuff.setRequiredOwnerCluster( refCluster );
+				}
+				else {
 					throw new CFLibNullArgumentException( getClass(),
 						S_ProcName,
 						0,
-						"Resolve SysRole reference named \"" + attrSysRole + "\" to table SecSysGrp" );
+						"Owner<Cluster>" );
 				}
 			}
-			else {
-				refSysRole = null;
-			}
-			editBuff.setRequiredParentSysRole( refSysRole );
 
 			CFIntSaxLoader.LoaderBehaviourEnum loaderBehaviour = saxLoader.getSecClusRoleLoaderBehaviour();
 			ICFIntSecClusRoleEditObj editSecClusRole = null;
@@ -213,7 +197,6 @@ public class CFIntSaxLoaderSecClusRole
 						break;
 					case Update:
 						editSecClusRole = (ICFIntSecClusRoleEditObj)origSecClusRole.beginEdit();
-						editSecClusRole.setRequiredParentSysRole( editBuff.getRequiredParentSysRole() );
 						break;
 					case Replace:
 						editSecClusRole = (ICFIntSecClusRoleEditObj)origSecClusRole.beginEdit();
