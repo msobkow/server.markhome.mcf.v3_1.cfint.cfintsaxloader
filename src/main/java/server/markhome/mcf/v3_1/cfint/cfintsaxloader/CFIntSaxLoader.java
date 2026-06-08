@@ -131,6 +131,7 @@ public class CFIntSaxLoader
 	private LoaderBehaviourEnum secUserPasswordLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum subProjectLoaderBehaviour = LoaderBehaviourEnum.Update;
 	private LoaderBehaviourEnum sysClusterLoaderBehaviour = LoaderBehaviourEnum.Insert;
+	private LoaderBehaviourEnum tableInfoLoaderBehaviour = LoaderBehaviourEnum.Update;
 	private LoaderBehaviourEnum tenantLoaderBehaviour = LoaderBehaviourEnum.Insert;
 	private LoaderBehaviourEnum tldLoaderBehaviour = LoaderBehaviourEnum.Update;
 	private LoaderBehaviourEnum topDomainLoaderBehaviour = LoaderBehaviourEnum.Update;
@@ -187,6 +188,7 @@ public class CFIntSaxLoader
 	private CFIntSaxLoaderSecUserPassword secUserPasswordHandler = null;
 	private CFIntSaxLoaderSubProject subProjectHandler = null;
 	private CFIntSaxLoaderSysCluster sysClusterHandler = null;
+	private CFIntSaxLoaderTableInfo tableInfoHandler = null;
 	private CFIntSaxLoaderTenant tenantHandler = null;
 	private CFIntSaxLoaderTld tldHandler = null;
 	private CFIntSaxLoaderTopDomain topDomainHandler = null;
@@ -422,6 +424,12 @@ public class CFIntSaxLoader
 		}
 		return( sysClusterHandler );
 	}
+	protected CFIntSaxLoaderTableInfo getTableInfoHandler() {
+		if( tableInfoHandler == null ) {
+			tableInfoHandler = new CFIntSaxLoaderTableInfo( this );
+		}
+		return( tableInfoHandler );
+	}
 	protected CFIntSaxLoaderTenant getTenantHandler() {
 		if( tenantHandler == null ) {
 			tenantHandler = new CFIntSaxLoaderTenant( this );
@@ -514,6 +522,7 @@ public class CFIntSaxLoader
 			saxDocHandler.addElementHandler( "SecSysRole", getSecSysRoleHandler() );
 			saxDocHandler.addElementHandler( "SecUser", getSecUserHandler() );
 			saxDocHandler.addElementHandler( "SecUserPWHistory", getSecUserPWHistoryHandler() );
+			saxDocHandler.addElementHandler( "TableInfo", getTableInfoHandler() );
 			saxDocHandler.addElementHandler( "URLProtocol", getURLProtocolHandler() );
 		}
 		return( saxDocHandler );
@@ -813,6 +822,14 @@ public class CFIntSaxLoader
 
 	public void setSysClusterLoaderBehaviour( LoaderBehaviourEnum value ) {
 		sysClusterLoaderBehaviour = value;
+	}
+
+	public LoaderBehaviourEnum getTableInfoLoaderBehaviour() {
+		return( tableInfoLoaderBehaviour );
+	}
+
+	public void setTableInfoLoaderBehaviour( LoaderBehaviourEnum value ) {
+		tableInfoLoaderBehaviour = value;
 	}
 
 	public LoaderBehaviourEnum getTenantLoaderBehaviour() {
